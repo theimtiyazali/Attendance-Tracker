@@ -16,8 +16,14 @@ const LoginPage = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    login(username, role);
-    // AuthContext's useEffect will handle redirection after successful login
+    const loggedInUser = login(username, role);
+    if (loggedInUser) {
+      if (loggedInUser.role === 'admin') {
+        navigate("/admin-dashboard", { replace: true });
+      } else if (loggedInUser.role === 'employee') {
+        navigate("/employee-dashboard", { replace: true });
+      }
+    }
   };
 
   return (
