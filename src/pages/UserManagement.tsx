@@ -79,7 +79,7 @@ const UserManagementPage = () => {
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
-    hover: { scale: 1.01, boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.1)" },
+    hover: { scale: 1.01, boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.1)" }, // Keep for motion, but actual shadow from neumorphic class
   };
 
   const itemVariants = {
@@ -104,7 +104,7 @@ const UserManagementPage = () => {
 
       <div className="grid gap-6 lg:grid-cols-2">
         <motion.div variants={cardVariants} initial="hidden" animate="visible" whileHover="hover" transition={{ delay: 0.1 }}>
-          <Card className="shadow-lg rounded-xl border-2 border-primary/10">
+          <Card className="shadow-neumorphic-out rounded-2xl bg-background">
             <CardHeader>
               <CardTitle className="text-xl text-primary">Add New User</CardTitle>
             </CardHeader>
@@ -119,23 +119,23 @@ const UserManagementPage = () => {
                     value={newUsername}
                     onChange={(e) => setNewUsername(e.target.value)}
                     required
-                    className="mt-1 bg-input/50 border-primary/30 focus:border-primary focus:ring-primary transition-all duration-300"
+                    className="mt-1 bg-background shadow-neumorphic-in focus:ring-primary transition-all duration-300"
                   />
                 </motion.div>
                 <motion.div variants={itemVariants}>
                   <Label htmlFor="new-user-role" className="text-foreground">Role</Label>
                   <Select value={newUserRole} onValueChange={(value: UserRole) => setNewUserRole(value)}>
-                    <SelectTrigger id="new-user-role" className="mt-1 bg-input/50 border-primary/30 focus:border-primary focus:ring-primary transition-all duration-300">
+                    <SelectTrigger id="new-user-role" className="mt-1 bg-background shadow-neumorphic-in focus:ring-primary transition-all duration-300">
                       <SelectValue placeholder="Select a role" />
                     </SelectTrigger>
-                    <SelectContent className="bg-card border-primary/30">
+                    <SelectContent className="bg-card shadow-neumorphic-out rounded-xl">
                       <SelectItem value="employee">Employee</SelectItem>
                       <SelectItem value="admin">Admin</SelectItem>
                     </SelectContent>
                   </Select>
                 </motion.div>
                 <motion.div variants={itemVariants}>
-                  <Button type="submit" className="w-full py-2 text-base font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300 shadow-md">
+                  <Button type="submit" className="w-full py-2 text-base font-semibold bg-primary text-primary-foreground shadow-neumorphic-out active:shadow-neumorphic-in hover:bg-primary/90 transition-all duration-300">
                     Add User
                   </Button>
                 </motion.div>
@@ -145,7 +145,7 @@ const UserManagementPage = () => {
         </motion.div>
 
         <motion.div variants={cardVariants} initial="hidden" animate="visible" whileHover="hover" transition={{ delay: 0.2 }}>
-          <Card className="shadow-lg rounded-xl border-2 border-primary/10">
+          <Card className="shadow-neumorphic-out rounded-2xl bg-background">
             <CardHeader>
               <CardTitle className="text-xl text-primary">Existing Users</CardTitle>
             </CardHeader>
@@ -155,7 +155,7 @@ const UserManagementPage = () => {
               ) : (
                 <Table>
                   <TableHeader>
-                    <TableRow className="bg-secondary/20 hover:bg-secondary/20">
+                    <TableRow className="bg-secondary/20 hover:bg-secondary/20"> {/* Keep secondary for table header for contrast */}
                       <TableHead className="text-foreground">Username</TableHead>
                       <TableHead className="text-foreground">Role</TableHead>
                       <TableHead className="text-right text-foreground">Actions</TableHead>
@@ -165,7 +165,7 @@ const UserManagementPage = () => {
                     {users.map((user) => (
                       <motion.tr
                         key={user.id}
-                        className="hover:bg-secondary/10 transition-colors duration-200"
+                        className="hover:bg-background/70 transition-colors duration-200"
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.3 }}
@@ -179,12 +179,12 @@ const UserManagementPage = () => {
                                 variant="destructive"
                                 size="icon"
                                 disabled={user.id === currentUser?.id} // Disable deleting own account
-                                className="shadow-sm hover:shadow-md"
+                                className="shadow-neumorphic-out active:shadow-neumorphic-in"
                               >
                                 <Trash2 className="h-4 w-4" />
                               </Button>
                             </AlertDialogTrigger>
-                            <AlertDialogContent className="bg-card border-primary/30 shadow-lg rounded-xl">
+                            <AlertDialogContent className="bg-card shadow-neumorphic-out rounded-2xl">
                               <AlertDialogHeader>
                                 <AlertDialogTitle className="text-primary">Are you absolutely sure?</AlertDialogTitle>
                                 <AlertDialogDescription className="text-muted-foreground">
@@ -193,8 +193,8 @@ const UserManagementPage = () => {
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
-                                <AlertDialogCancel className="border-primary text-primary hover:bg-primary/10">Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={() => handleDeleteUser(user.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                                <AlertDialogCancel className="shadow-neumorphic-out active:shadow-neumorphic-in bg-background text-primary hover:bg-background">Cancel</AlertDialogCancel>
+                                <AlertDialogAction onClick={() => handleDeleteUser(user.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-neumorphic-out active:shadow-neumorphic-in">
                                   Continue
                                 </AlertDialogAction>
                               </AlertDialogFooter>

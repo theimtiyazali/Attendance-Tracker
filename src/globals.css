@@ -4,89 +4,102 @@
 
 @layer base {
   :root {
-    --background: 30 100% 97%; /* Very light, warm off-white */
-    --foreground: 20 15% 25%; /* Deep charcoal/brown */
+    /* Base Neumorphic Palette - Soft Blue-Grey */
+    --background: 220 15% 95%; /* Very light blue-grey */
+    --foreground: 220 15% 20%; /* Dark blue-grey for text */
 
-    --card: 30 100% 97%;
-    --card-foreground: 20 15% 25%;
+    --card: 220 15% 95%; /* Same as background for seamless neumorphism */
+    --card-foreground: 220 15% 20%;
 
-    --popover: 30 100% 97%;
-    --popover-foreground: 20 15% 25%;
+    --popover: 220 15% 95%; /* Same as background */
+    --popover-foreground: 220 15% 20%;
 
-    --primary: 20 70% 40%; /* Deep Terracotta */
+    --primary: 220 70% 50%; /* Medium blue for interactive elements */
     --primary-foreground: 0 0% 100%; /* White */
 
-    --secondary: 90 20% 70%; /* Muted Sage Green */
-    --secondary-foreground: 20 15% 25%;
+    --secondary: 220 10% 85%; /* Slightly darker light blue-grey for secondary elements */
+    --secondary-foreground: 220 15% 20%;
 
-    --muted: 90 20% 90%; /* Lighter Sage */
-    --muted-foreground: 20 10% 45%; /* Medium brown-grey */
+    --muted: 220 10% 90%; /* Even lighter blue-grey for muted text/elements */
+    --muted-foreground: 220 10% 40%; /* Medium blue-grey */
 
-    --accent: 40 70% 60%; /* Golden Mustard */
-    --accent-foreground: 20 15% 25%;
+    --accent: 40 80% 60%; /* Soft gold/yellow for highlights/accents */
+    --accent-foreground: 220 15% 20%;
 
     --destructive: 0 80% 50%; /* Classic Red */
     --destructive-foreground: 0 0% 100%;
 
-    --border: 30 10% 80%; /* Soft warm grey */
-    --input: 30 10% 80%;
-    --ring: 20 70% 40%;
+    --border: 220 10% 88%; /* Subtle border, almost invisible */
+    --input: 220 15% 95%; /* Same as background for soft inset */
+    --ring: 220 70% 50%; /* Primary color for focus rings */
 
-    --radius: 0.75rem; /* Slightly larger radius for softer look */
+    --radius: 1rem; /* More rounded for softer neumorphism */
 
-    --sidebar-background: 30 100% 95%;
-    --sidebar-foreground: 20 15% 20%;
-    --sidebar-primary: 20 70% 35%;
+    /* Neumorphism Shadow Colors (derived from background) */
+    --shadow-dark: 220 15% 85%; /* Slightly darker than background */
+    --shadow-light: 220 15% 100%; /* Slightly lighter than background, almost white */
+
+    /* Sidebar (if distinct from main background) */
+    --sidebar-background: 220 15% 93%; /* Slightly different for distinction */
+    --sidebar-foreground: 220 15% 20%;
+    --sidebar-primary: 220 70% 45%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 90 20% 80%;
-    --sidebar-accent-foreground: 20 15% 20%;
-    --sidebar-border: 30 10% 75%;
-    --sidebar-ring: 20 70% 40%;
+    --sidebar-accent: 220 10% 80%;
+    --sidebar-accent-foreground: 220 15% 20%;
+    --sidebar-border: 220 10% 85%;
+    --sidebar-ring: 220 70% 45%;
   }
 
   .dark {
-    --background: 210 20% 18%; /* Deep Blue-Grey */
-    --foreground: 30 100% 90%; /* Soft Cream */
+    /* Base Neumorphic Palette - Dark Blue-Grey */
+    --background: 220 20% 15%; /* Dark blue-grey */
+    --foreground: 220 15% 85%; /* Light blue-grey for text */
 
-    --card: 210 20% 18%;
-    --card-foreground: 30 100% 90%;
+    --card: 220 20% 15%; /* Same as background */
+    --card-foreground: 220 15% 85%;
 
-    --popover: 210 20% 18%;
-    --popover-foreground: 30 100% 90%;
+    --popover: 220 20% 15%; /* Same as background */
+    --popover-foreground: 220 15% 85%;
 
-    --primary: 20 70% 50%; /* Brighter Terracotta */
+    --primary: 220 70% 60%; /* Brighter blue for interactive elements */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 90 15% 30%; /* Darker Muted Sage */
-    --secondary-foreground: 30 100% 90%;
+    --secondary: 220 15% 25%; /* Slightly lighter dark blue-grey */
+    --secondary-foreground: 220 15% 85%;
 
-    --muted: 210 15% 25%; /* Darker Blue-Grey */
-    --muted-foreground: 30 100% 70%; /* Muted Light Cream */
+    --muted: 220 15% 20%;
+    --muted-foreground: 220 10% 60%;
 
-    --accent: 40 70% 45%; /* Deeper Golden Mustard */
-    --accent-foreground: 30 100% 90%;
+    --accent: 40 80% 50%; /* Deeper gold */
+    --accent-foreground: 220 15% 85%;
 
     --destructive: 0 70% 40%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 210 15% 30%; /* Dark Blue-Grey border */
-    --input: 210 15% 30%;
-    --ring: 20 70% 50%;
+    --border: 220 15% 20%;
+    --input: 220 20% 15%; /* Same as background for soft inset */
+    --ring: 220 70% 60%;
 
-    --sidebar-background: 210 20% 15%;
-    --sidebar-foreground: 30 100% 95%;
-    --sidebar-primary: 20 70% 55%;
+    /* Neumorphism Shadow Colors (derived from background) */
+    --shadow-dark: 220 20% 10%; /* Slightly darker than background */
+    --shadow-light: 220 20% 20%; /* Slightly lighter than background */
+
+    /* Sidebar (if distinct from main background) */
+    --sidebar-background: 220 20% 12%;
+    --sidebar-foreground: 220 15% 90%;
+    --sidebar-primary: 220 70% 65%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 90 15% 25%;
-    --sidebar-accent-foreground: 30 100% 95%;
-    --sidebar-border: 210 15% 28%;
-    --sidebar-ring: 20 70% 50%;
+    --sidebar-accent: 220 15% 20%;
+    --sidebar-accent-foreground: 220 15% 90%;
+    --sidebar-border: 220 15% 18%;
+    --sidebar-ring: 220 70% 65%;
   }
 }
 
 @layer base {
   * {
-    @apply border-border;
+    /* Remove default borders for neumorphism */
+    border-color: transparent;
   }
 
   body {

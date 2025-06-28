@@ -34,7 +34,7 @@ const LoginPage = () => {
   const cardVariants = {
     hidden: { opacity: 0, y: 50, scale: 0.95 },
     visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.6, ease: "easeOut" } },
-    hover: { scale: 1.02, boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.15)" },
+    hover: { scale: 1.02, boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.15)" }, // Keep for motion, but actual shadow from neumorphic class
   };
 
   const itemVariants = {
@@ -51,7 +51,7 @@ const LoginPage = () => {
         animate="visible"
         whileHover="hover"
       >
-        <Card className="shadow-lg rounded-xl border-2 border-primary/20">
+        <Card className="shadow-neumorphic-out rounded-2xl bg-background">
           <CardHeader className="text-center">
             <CardTitle className="text-3xl font-extrabold text-primary">Welcome to Attendance Tracker</CardTitle>
             <CardDescription className="text-muted-foreground mt-2">Log in to your account</CardDescription>
@@ -67,16 +67,16 @@ const LoginPage = () => {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   required
-                  className="mt-1 bg-input/50 border-primary/30 focus:border-primary focus:ring-primary transition-all duration-300"
+                  className="mt-1 bg-background shadow-neumorphic-in focus:ring-primary transition-all duration-300"
                 />
               </motion.div>
               <motion.div variants={itemVariants}>
                 <Label htmlFor="role" className="text-foreground">Role</Label>
                 <Select value={role} onValueChange={(value: UserRole) => setRole(value)}>
-                  <SelectTrigger id="role" className="mt-1 bg-input/50 border-primary/30 focus:border-primary focus:ring-primary transition-all duration-300">
+                  <SelectTrigger id="role" className="mt-1 bg-background shadow-neumorphic-in focus:ring-primary transition-all duration-300">
                     <SelectValue placeholder="Select a role" />
                   </SelectTrigger>
-                  <SelectContent className="bg-card border-primary/30">
+                  <SelectContent className="bg-card shadow-neumorphic-out rounded-xl">
                     <SelectItem value="employee">Employee</SelectItem>
                     <SelectItem value="admin">Admin</SelectItem>
                   </SelectContent>
@@ -85,7 +85,7 @@ const LoginPage = () => {
               <motion.div variants={itemVariants}>
                 <Button
                   type="submit"
-                  className="w-full py-3 text-lg font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300 shadow-md hover:shadow-lg"
+                  className="w-full py-3 text-lg font-semibold bg-primary text-primary-foreground shadow-neumorphic-out active:shadow-neumorphic-in hover:bg-primary/90 transition-all duration-300"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >

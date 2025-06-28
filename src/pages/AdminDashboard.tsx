@@ -83,7 +83,7 @@ const AdminDashboard = () => {
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
-    hover: { scale: 1.01, boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.1)" },
+    hover: { scale: 1.01, boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.1)" }, // Keep for motion, but actual shadow from neumorphic class
   };
 
   const itemVariants = {
@@ -96,7 +96,7 @@ const AdminDashboard = () => {
       <h2 className="text-3xl font-bold mb-6 text-primary">Admin Dashboard</h2>
       <div className="grid gap-6 mb-6 md:grid-cols-2 lg:grid-cols-3">
         <motion.div variants={cardVariants} initial="hidden" animate="visible" whileHover="hover" transition={{ delay: 0.1 }}>
-          <Card className="shadow-lg rounded-xl border-2 border-primary/10">
+          <Card className="shadow-neumorphic-out rounded-2xl bg-background">
             <CardHeader>
               <CardTitle className="text-xl text-primary">Welcome, {currentUser?.name}!</CardTitle>
             </CardHeader>
@@ -106,7 +106,7 @@ const AdminDashboard = () => {
           </Card>
         </motion.div>
         <motion.div variants={cardVariants} initial="hidden" animate="visible" whileHover="hover" transition={{ delay: 0.2 }}>
-          <Card className="shadow-lg rounded-xl border-2 border-primary/10">
+          <Card className="shadow-neumorphic-out rounded-2xl bg-background">
             <CardHeader>
               <CardTitle className="text-xl text-primary">Live Employee Statuses</CardTitle>
             </CardHeader>
@@ -129,7 +129,7 @@ const AdminDashboard = () => {
           </Card>
         </motion.div>
         <motion.div variants={cardVariants} initial="hidden" animate="visible" whileHover="hover" transition={{ delay: 0.3 }}>
-          <Card className="shadow-lg rounded-xl border-2 border-primary/10">
+          <Card className="shadow-neumorphic-out rounded-2xl bg-background">
             <CardHeader>
               <CardTitle className="text-xl text-primary">Filter Attendance</CardTitle>
             </CardHeader>
@@ -141,7 +141,7 @@ const AdminDashboard = () => {
                     <Button
                       variant={"outline"}
                       className={cn(
-                        "w-full justify-start text-left font-normal bg-input/50 border-primary/30 hover:bg-input/70 transition-all duration-300",
+                        "w-full justify-start text-left font-normal bg-background shadow-neumorphic-out active:shadow-neumorphic-in hover:bg-background transition-all duration-300",
                         !selectedDate && "text-muted-foreground"
                       )}
                     >
@@ -149,7 +149,7 @@ const AdminDashboard = () => {
                       {selectedDate ? format(selectedDate, "PPP") : <span>Pick a date</span>}
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0 bg-card border-primary/30 shadow-lg rounded-xl">
+                  <PopoverContent className="w-auto p-0 bg-card shadow-neumorphic-out rounded-2xl">
                     <Calendar
                       mode="single"
                       selected={selectedDate}
@@ -162,10 +162,10 @@ const AdminDashboard = () => {
               <motion.div variants={itemVariants}>
                 <label className="block text-sm font-medium mb-1 text-foreground">Select Employee</label>
                 <Select value={selectedEmployeeId} onValueChange={setSelectedEmployeeId}>
-                  <SelectTrigger className="bg-input/50 border-primary/30 focus:border-primary focus:ring-primary transition-all duration-300">
+                  <SelectTrigger className="bg-background shadow-neumorphic-in focus:ring-primary transition-all duration-300">
                     <SelectValue placeholder="All Employees" />
                   </SelectTrigger>
-                  <SelectContent className="bg-card border-primary/30">
+                  <SelectContent className="bg-card shadow-neumorphic-out rounded-xl">
                     <SelectItem value="all">All Employees</SelectItem>
                     {allUsers.map(u => (
                       <SelectItem key={u.id} value={u.id}>{u.name}</SelectItem>
@@ -179,7 +179,7 @@ const AdminDashboard = () => {
       </div>
 
       <motion.div variants={cardVariants} initial="hidden" animate="visible" whileHover="hover" transition={{ delay: 0.4 }} className="mb-6">
-        <Card className="shadow-lg rounded-xl border-2 border-primary/10">
+        <Card className="shadow-neumorphic-out rounded-2xl bg-background">
           <CardHeader>
             <CardTitle className="text-xl text-primary">Daily Summaries for {selectedDate ? format(selectedDate, 'PPP') : 'Today'}</CardTitle>
           </CardHeader>
@@ -189,7 +189,7 @@ const AdminDashboard = () => {
             ) : (
               <Table>
                 <TableHeader>
-                  <TableRow className="bg-secondary/20 hover:bg-secondary/20">
+                  <TableRow className="bg-secondary/20 hover:bg-secondary/20"> {/* Keep secondary for table header for contrast */}
                     <TableHead className="text-foreground">Employee</TableHead>
                     <TableHead className="text-foreground">Work Time</TableHead>
                     <TableHead className="text-foreground">Break Time</TableHead>
@@ -202,7 +202,7 @@ const AdminDashboard = () => {
                     .map(([userId, summary]) => (
                       <motion.tr
                         key={userId}
-                        className="hover:bg-secondary/10 transition-colors duration-200"
+                        className="hover:bg-background/70 transition-colors duration-200"
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.3 }}
@@ -221,7 +221,7 @@ const AdminDashboard = () => {
       </motion.div>
 
       <motion.div variants={cardVariants} initial="hidden" animate="visible" whileHover="hover" transition={{ delay: 0.5 }}>
-        <Card className="shadow-lg rounded-xl border-2 border-primary/10">
+        <Card className="shadow-neumorphic-out rounded-2xl bg-background">
           <CardHeader>
             <CardTitle className="text-xl text-primary">Attendance Logs for {selectedDate ? format(selectedDate, 'PPP') : 'Today'} {selectedEmployeeId !== 'all' ? `(${allUsers.find(u => u.id === selectedEmployeeId)?.name})` : ''}</CardTitle>
           </CardHeader>
@@ -233,7 +233,7 @@ const AdminDashboard = () => {
                 {filteredLogs.map((log) => (
                   <motion.div
                     key={log.id}
-                    className="flex items-center justify-between p-3 bg-secondary/20 rounded-md shadow-sm hover:bg-secondary/30 transition-all duration-200"
+                    className="flex items-center justify-between p-3 bg-secondary/20 rounded-md shadow-sm hover:bg-secondary/30 transition-all duration-200" // Keep secondary for log items for contrast
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3 }}

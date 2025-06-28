@@ -12,7 +12,7 @@ const Layout = ({ children }: LayoutProps) => {
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       <Header />
       <motion.main
-        className="flex-grow p-4 container mx-auto"
+        className="flex-grow p-4 container mx-auto bg-background"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}

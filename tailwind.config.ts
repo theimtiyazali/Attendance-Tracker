@@ -19,7 +19,7 @@ export default {
     },
     extend: {
       colors: {
-        // Warm Palette
+        // These colors are defined in src/globals.css
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -65,9 +65,13 @@ export default {
         },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        lg: "1rem", // Increased radius for softer neumorphism
+        md: "0.75rem",
+        sm: "0.5rem",
+      },
+      boxShadow: { // Custom shadows for Neumorphism
+        'neumorphic-out': '8px 8px 16px hsl(var(--shadow-dark)), -8px -8px 16px hsl(var(--shadow-light))',
+        'neumorphic-in': 'inset 5px 5px 10px hsl(var(--shadow-dark)), inset -5px -5px 10px hsl(var(--shadow-light))',
       },
       keyframes: {
         "accordion-down": {

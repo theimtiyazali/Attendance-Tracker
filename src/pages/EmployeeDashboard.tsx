@@ -125,7 +125,7 @@ const EmployeeDashboard = () => {
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
-    hover: { scale: 1.01, boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.1)" },
+    hover: { scale: 1.01, boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.1)" }, // Keep for motion, but actual shadow from neumorphic class
   };
 
   const itemVariants = { // Added itemVariants definition
@@ -143,7 +143,7 @@ const EmployeeDashboard = () => {
       <h2 className="text-3xl font-bold mb-6 text-primary">Employee Dashboard</h2>
       <div className="grid gap-6 mb-6 md:grid-cols-2 lg:grid-cols-3">
         <motion.div variants={cardVariants} initial="hidden" animate="visible" whileHover="hover" transition={{ delay: 0.1 }}>
-          <Card className="shadow-lg rounded-xl border-2 border-primary/10">
+          <Card className="shadow-neumorphic-out rounded-2xl bg-background">
             <CardHeader>
               <CardTitle className="text-xl text-primary">Welcome, {user?.name}!</CardTitle>
             </CardHeader>
@@ -152,7 +152,7 @@ const EmployeeDashboard = () => {
               <div className="mt-4 space-y-2">
                 <motion.div variants={itemVariants}>
                   <Button
-                    className="w-full py-2 text-base font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300 shadow-md"
+                    className="w-full py-2 text-base font-semibold bg-primary text-primary-foreground shadow-neumorphic-out active:shadow-neumorphic-in hover:bg-primary/90 transition-all duration-300"
                     onClick={() => handleClockAction('IN')}
                     disabled={!isToday || currentStatus?.status === 'Clocked In' || currentStatus?.status === 'On Break'}
                     whileHover="hover"
@@ -164,7 +164,7 @@ const EmployeeDashboard = () => {
                 </motion.div>
                 <motion.div variants={itemVariants}>
                   <Button
-                    className="w-full py-2 text-base font-semibold bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-all duration-300 shadow-md"
+                    className="w-full py-2 text-base font-semibold bg-destructive text-destructive-foreground shadow-neumorphic-out active:shadow-neumorphic-in hover:bg-destructive/90 transition-all duration-300"
                     onClick={() => handleClockAction('OUT')}
                     disabled={!isToday || currentStatus?.status === 'Clocked Out' || currentStatus?.status === 'On Break'}
                     whileHover="hover"
@@ -176,7 +176,7 @@ const EmployeeDashboard = () => {
                 </motion.div>
                 <motion.div variants={itemVariants}>
                   <Button
-                    className="w-full py-2 text-base font-semibold bg-secondary text-secondary-foreground hover:bg-secondary/90 transition-all duration-300 shadow-md"
+                    className="w-full py-2 text-base font-semibold bg-secondary text-secondary-foreground shadow-neumorphic-out active:shadow-neumorphic-in hover:bg-secondary/90 transition-all duration-300"
                     onClick={() => handleClockAction('BREAK_START')}
                     disabled={!isToday || currentStatus?.status !== 'Clocked In'}
                     whileHover="hover"
@@ -188,7 +188,7 @@ const EmployeeDashboard = () => {
                 </motion.div>
                 <motion.div variants={itemVariants}>
                   <Button
-                    className="w-full py-2 text-base font-semibold bg-secondary text-secondary-foreground hover:bg-secondary/90 transition-all duration-300 shadow-md"
+                    className="w-full py-2 text-base font-semibold bg-secondary text-secondary-foreground shadow-neumorphic-out active:shadow-neumorphic-in hover:bg-secondary/90 transition-all duration-300"
                     onClick={() => handleClockAction('BREAK_END')}
                     disabled={!isToday || currentStatus?.status !== 'On Break'}
                     whileHover="hover"
@@ -204,7 +204,7 @@ const EmployeeDashboard = () => {
         </motion.div>
 
         <motion.div variants={cardVariants} initial="hidden" animate="visible" whileHover="hover" transition={{ delay: 0.2 }}>
-          <Card className="shadow-lg rounded-xl border-2 border-primary/10">
+          <Card className="shadow-neumorphic-out rounded-2xl bg-background">
             <CardHeader>
               <CardTitle className="text-xl text-primary">Select Date</CardTitle>
             </CardHeader>
@@ -214,7 +214,7 @@ const EmployeeDashboard = () => {
                   <Button
                     variant={"outline"}
                     className={cn(
-                      "w-full justify-start text-left font-normal bg-input/50 border-primary/30 hover:bg-input/70 transition-all duration-300",
+                      "w-full justify-start text-left font-normal bg-background shadow-neumorphic-out active:shadow-neumorphic-in hover:bg-background transition-all duration-300",
                       !selectedDate && "text-muted-foreground"
                     )}
                   >
@@ -222,7 +222,7 @@ const EmployeeDashboard = () => {
                     {selectedDate ? format(selectedDate, "PPP") : <span>Pick a date</span>}
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0 bg-card border-primary/30 shadow-lg rounded-xl">
+                <PopoverContent className="w-auto p-0 bg-card shadow-neumorphic-out rounded-2xl">
                   <Calendar
                     mode="single"
                     selected={selectedDate}
@@ -251,7 +251,7 @@ const EmployeeDashboard = () => {
         </motion.div>
 
         <motion.div variants={cardVariants} initial="hidden" animate="visible" whileHover="hover" transition={{ delay: 0.3 }}>
-          <Card className="shadow-lg rounded-xl border-2 border-primary/10">
+          <Card className="shadow-neumorphic-out rounded-2xl bg-background">
             <CardHeader>
               <CardTitle className="text-xl text-primary">{isToday ? "Today's" : "Selected Day's"} Work Summary</CardTitle>
             </CardHeader>
@@ -268,7 +268,7 @@ const EmployeeDashboard = () => {
         </motion.div>
 
         <motion.div variants={cardVariants} initial="hidden" animate="visible" whileHover="hover" transition={{ delay: 0.4 }} className="lg:col-span-3">
-          <Card className="shadow-lg rounded-xl border-2 border-primary/10">
+          <Card className="shadow-neumorphic-out rounded-2xl bg-background">
             <CardHeader>
               <CardTitle className="text-xl text-primary">{isToday ? "Today's" : "Selected Day's"} Attendance Log</CardTitle>
             </CardHeader>
@@ -280,7 +280,7 @@ const EmployeeDashboard = () => {
                   {dailyLogs.map((log) => (
                     <motion.div
                       key={log.id}
-                      className="flex items-center justify-between p-3 bg-secondary/20 rounded-md shadow-sm hover:bg-secondary/30 transition-all duration-200"
+                      className="flex items-center justify-between p-3 bg-secondary/20 rounded-md shadow-sm hover:bg-secondary/30 transition-all duration-200" // Keep secondary for log items for contrast
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.3 }}
