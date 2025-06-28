@@ -8,6 +8,7 @@ import NotFound from "./pages/NotFound";
 import LoginPage from "./pages/Login";
 import EmployeeDashboard from "./pages/EmployeeDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import UserManagementPage from "./pages/UserManagement"; // New import
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ThemeProvider } from "next-themes";
 import React from "react";
@@ -53,6 +54,14 @@ const App = () => (
                 element={
                   <ProtectedRoute allowedRoles={['admin']}>
                     <AdminDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route // New Route for User Management
+                path="/admin/users"
+                element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <UserManagementPage />
                   </ProtectedRoute>
                 }
               />

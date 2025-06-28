@@ -56,3 +56,22 @@ export const getCurrentUser = (): User | null => {
 export const getAllUsers = (): User[] => {
   return getStoredUsers();
 };
+
+export const addUser = (username: string, role: User['role']): User | null => {
+  const allUsers = getStoredUsers();
+  if (allUsers.some(u => u.id === username)) {
+    return null; // User already exists
+  }
+  const newUser: User = { id: username, name: username, role };
+  allUsers.push(newUser);
+  saveUsers(allUsers);
+  return newUser;
+};
+
+export const deleteUser = (userId: string): boolean => {
+  let allUsers = getStoredUsers();
+  const initialLength = allUsers.length;
+  allUsers = allUsers.filter(u => u.id !== userId);
+  saveUsers(allUsers);
+  return allUsers.length < initialLength; // True if a user was removed
+};
