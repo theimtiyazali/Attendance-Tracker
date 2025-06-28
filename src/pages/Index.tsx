@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { MadeWithDyad } from "@/components/made-with-dyad";
+import { motion } from "framer-motion";
 
 const Index = () => {
   const { isAuthenticated, isAdmin, isEmployee } = useAuth();
@@ -21,13 +22,18 @@ const Index = () => {
   }, [isAuthenticated, isAdmin, isEmployee, navigate]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-900">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4 text-gray-800 dark:text-gray-200">Loading Application...</h1>
-        <p className="text-xl text-gray-600 dark:text-gray-400">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground">
+      <motion.div
+        className="text-center"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
+        <h1 className="text-4xl font-bold mb-4 text-primary">Loading Application...</h1>
+        <p className="text-xl text-muted-foreground">
           Please wait while we redirect you.
         </p>
-      </div>
+      </motion.div>
       <MadeWithDyad />
     </div>
   );
