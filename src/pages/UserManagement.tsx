@@ -96,7 +96,6 @@ const UserManagementPage = () => {
         </div>
       </Layout>
     );
-  );
   }
 
   return (
