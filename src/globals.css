@@ -4,83 +4,83 @@
 
 @layer base {
   :root {
-    --background: 30 100% 99%; /* Very light cream/peach */
-    --foreground: 20 10% 20%; /* Dark brown */
+    --background: 30 100% 97%; /* Very light, warm off-white */
+    --foreground: 20 15% 25%; /* Deep charcoal/brown */
 
-    --card: 30 100% 99%;
-    --card-foreground: 20 10% 20%;
+    --card: 30 100% 97%;
+    --card-foreground: 20 15% 25%;
 
-    --popover: 30 100% 99%;
-    --popover-foreground: 20 10% 20%;
+    --popover: 30 100% 97%;
+    --popover-foreground: 20 15% 25%;
 
-    --primary: 25 95% 50%; /* Burnt orange */
+    --primary: 20 70% 40%; /* Deep Terracotta */
     --primary-foreground: 0 0% 100%; /* White */
 
-    --secondary: 30 50% 90%; /* Light tan */
-    --secondary-foreground: 20 10% 20%;
+    --secondary: 90 20% 70%; /* Muted Sage Green */
+    --secondary-foreground: 20 15% 25%;
 
-    --muted: 30 50% 95%; /* Lighter tan */
-    --muted-foreground: 20 10% 40%; /* Medium brown */
+    --muted: 90 20% 90%; /* Lighter Sage */
+    --muted-foreground: 20 10% 45%; /* Medium brown-grey */
 
-    --accent: 35 70% 70%; /* Muted orange-yellow */
-    --accent-foreground: 20 10% 20%;
+    --accent: 40 70% 60%; /* Golden Mustard */
+    --accent-foreground: 20 15% 25%;
 
-    --destructive: 0 84.2% 60.2%; /* Red */
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 80% 50%; /* Classic Red */
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 30 20% 85%; /* Light brown-grey */
-    --input: 30 20% 85%;
-    --ring: 25 95% 50%;
+    --border: 30 10% 80%; /* Soft warm grey */
+    --input: 30 10% 80%;
+    --ring: 20 70% 40%;
 
     --radius: 0.75rem; /* Slightly larger radius for softer look */
 
-    --sidebar-background: 30 100% 98%;
-    --sidebar-foreground: 20 10% 25%;
-    --sidebar-primary: 25 95% 45%;
+    --sidebar-background: 30 100% 95%;
+    --sidebar-foreground: 20 15% 20%;
+    --sidebar-primary: 20 70% 35%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 30 50% 92%;
-    --sidebar-accent-foreground: 20 10% 25%;
-    --sidebar-border: 30 20% 80%;
-    --sidebar-ring: 25 95% 50%;
+    --sidebar-accent: 90 20% 80%;
+    --sidebar-accent-foreground: 20 15% 20%;
+    --sidebar-border: 30 10% 75%;
+    --sidebar-ring: 20 70% 40%;
   }
 
   .dark {
-    --background: 20 15% 15%; /* Dark earthy brown */
-    --foreground: 30 100% 90%; /* Light cream */
+    --background: 210 20% 18%; /* Deep Blue-Grey */
+    --foreground: 30 100% 90%; /* Soft Cream */
 
-    --card: 20 15% 15%;
+    --card: 210 20% 18%;
     --card-foreground: 30 100% 90%;
 
-    --popover: 20 15% 15%;
+    --popover: 210 20% 18%;
     --popover-foreground: 30 100% 90%;
 
-    --primary: 25 95% 50%; /* Burnt orange (same as light) */
+    --primary: 20 70% 50%; /* Brighter Terracotta */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 20 10% 30%; /* Medium dark brown */
+    --secondary: 90 15% 30%; /* Darker Muted Sage */
     --secondary-foreground: 30 100% 90%;
 
-    --muted: 20 10% 25%; /* Darker brown */
-    --muted-foreground: 30 100% 70%; /* Muted light cream */
+    --muted: 210 15% 25%; /* Darker Blue-Grey */
+    --muted-foreground: 30 100% 70%; /* Muted Light Cream */
 
-    --accent: 35 70% 40%; /* Darker muted orange-yellow */
+    --accent: 40 70% 45%; /* Deeper Golden Mustard */
     --accent-foreground: 30 100% 90%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 70% 40%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 20 10% 35%; /* Darker brown-grey */
-    --input: 20 10% 35%;
-    --ring: 25 95% 50%;
+    --border: 210 15% 30%; /* Dark Blue-Grey border */
+    --input: 210 15% 30%;
+    --ring: 20 70% 50%;
 
-    --sidebar-background: 20 15% 10%;
+    --sidebar-background: 210 20% 15%;
     --sidebar-foreground: 30 100% 95%;
-    --sidebar-primary: 25 95% 55%;
+    --sidebar-primary: 20 70% 55%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 20 10% 20%;
+    --sidebar-accent: 90 15% 25%;
     --sidebar-accent-foreground: 30 100% 95%;
-    --sidebar-border: 20 10% 25%;
-    --sidebar-ring: 25 95% 50%;
+    --sidebar-border: 210 15% 28%;
+    --sidebar-ring: 20 70% 50%;
   }
 }
 
