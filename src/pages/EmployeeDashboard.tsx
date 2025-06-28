@@ -13,6 +13,10 @@ import { AttendanceLog, AttendanceEventType, DailySummary } from '@/types';
 import { toast } from 'sonner';
 import { format, parseISO } from 'date-fns';
 import { Separator } from '@/components/ui/separator';
+import { Calendar as CalendarIcon } from 'lucide-react';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
 
 const EmployeeDashboard = () => {
   const { user } = useAuth();
@@ -20,26 +24,41 @@ const EmployeeDashboard = () => {
   const [dailyLogs, setDailyLogs] = useState<AttendanceLog[]>([]);
   const [currentStatus, setCurrentStatus] = useState<{ status: 'Clocked In' | 'Clocked Out' | 'On Break', lastEvent: AttendanceLog | null } | null>(null);
   const [dailySummary, setDailySummary] = useState<DailySummary | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
 
-  const refreshData = () => {
+  const refreshData = (date: Date = new Date()) => {
     if (userId) {
-      const today = new Date().toISOString().split('T')[0];
-      setDailyLogs(getDailyLogsForUser(userId, today));
-      setCurrentStatus(getCurrentAttendanceStatus(userId));
-      setDailySummary(calculateDailySummary(userId, today));
+      const dateString = format(date, 'yyyy-MM-dd');
+      setDailyLogs(getDailyLogsForUser(userId, dateString));
+      setDailySummary(calculateDailySummary(userId, dateString));
+      // Current status should always reflect today's status
+      if (format(date, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd')) {
+        setCurrentStatus(getCurrentAttendanceStatus(userId));
+      } else {
+        setCurrentStatus(null); // No "current" status for past dates
+      }
     }
   };
 
   useEffect(() => {
-    refreshData();
-    // Set up an interval to refresh data, e.g., every minute, to keep status updated
-    const interval = setInterval(refreshData, 60 * 1000); // Refresh every minute
+    refreshData(selectedDate);
+    // Set up an interval to refresh data for TODAY's status, if today is selected
+    const interval = setInterval(() => {
+      if (selectedDate && format(selectedDate, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd')) {
+        setCurrentStatus(getCurrentAttendanceStatus(userId));
+      }
+    }, 60 * 1000); // Refresh current status every minute
     return () => clearInterval(interval);
-  }, [userId]);
+  }, [userId, selectedDate]);
 
   const handleClockAction = (type: AttendanceEventType) => {
     if (!userId) {
       toast.error("User not logged in.");
+      return;
+    }
+    // Ensure clock actions only apply to the current day
+    if (format(selectedDate || new Date(), 'yyyy-MM-dd') !== format(new Date(), 'yyyy-MM-dd')) {
+      toast.error("Clock actions can only be performed for the current day.");
       return;
     }
 
@@ -90,7 +109,7 @@ const EmployeeDashboard = () => {
     }
 
     recordAttendanceEvent(userId, type);
-    refreshData();
+    refreshData(new Date()); // Always refresh for today after a clock action
     toast.success(`Successfully recorded ${type} event.`);
   };
 
@@ -99,6 +118,8 @@ const EmployeeDashboard = () => {
     const mins = Math.round(minutes % 60);
     return `${hours}h ${mins}m`;
   };
+
+  const isToday = selectedDate && format(selectedDate, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd');
 
   return (
     <Layout>
@@ -114,14 +135,14 @@ const EmployeeDashboard = () => {
               <Button
                 className="w-full"
                 onClick={() => handleClockAction('IN')}
-                disabled={currentStatus?.status === 'Clocked In' || currentStatus?.status === 'On Break'}
+                disabled={!isToday || currentStatus?.status === 'Clocked In' || currentStatus?.status === 'On Break'}
               >
                 Clock In
               </Button>
               <Button
                 className="w-full"
                 onClick={() => handleClockAction('OUT')}
-                disabled={currentStatus?.status === 'Clocked Out' || currentStatus?.status === 'On Break'}
+                disabled={!isToday || currentStatus?.status === 'Clocked Out' || currentStatus?.status === 'On Break'}
                 variant="destructive"
               >
                 Clock Out
@@ -129,7 +150,7 @@ const EmployeeDashboard = () => {
               <Button
                 className="w-full"
                 onClick={() => handleClockAction('BREAK_START')}
-                disabled={currentStatus?.status !== 'Clocked In'}
+                disabled={!isToday || currentStatus?.status !== 'Clocked In'}
                 variant="secondary"
               >
                 Start Break
@@ -137,7 +158,7 @@ const EmployeeDashboard = () => {
               <Button
                 className="w-full"
                 onClick={() => handleClockAction('BREAK_END')}
-                disabled={currentStatus?.status !== 'On Break'}
+                disabled={!isToday || currentStatus?.status !== 'On Break'}
                 variant="secondary"
               >
                 End Break
@@ -148,21 +169,52 @@ const EmployeeDashboard = () => {
 
         <Card className="lg:col-span-1">
           <CardHeader>
-            <CardTitle>Current Status</CardTitle>
+            <CardTitle>Select Date</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className={`text-lg font-semibold ${currentStatus?.status === 'Clocked In' ? 'text-green-600' : currentStatus?.status === 'On Break' ? 'text-yellow-600' : 'text-red-600'}`}>
-              {currentStatus?.status}
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Last action: {currentStatus?.lastEvent ? `${currentStatus.lastEvent.type} at ${format(parseISO(currentStatus.lastEvent.timestamp), 'p')}` : 'N/A'}
-            </p>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant={"outline"}
+                  className={cn(
+                    "w-full justify-start text-left font-normal",
+                    !selectedDate && "text-muted-foreground"
+                  )}
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {selectedDate ? format(selectedDate, "PPP") : <span>Pick a date</span>}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0">
+                <Calendar
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={setSelectedDate}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
+            {isToday && currentStatus && (
+              <div className="mt-4">
+                <p className={`text-lg font-semibold ${currentStatus.status === 'Clocked In' ? 'text-green-600' : currentStatus.status === 'On Break' ? 'text-yellow-600' : 'text-red-600'}`}>
+                  Current Status: {currentStatus.status}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Last action: {currentStatus.lastEvent ? `${currentStatus.lastEvent.type} at ${format(parseISO(currentStatus.lastEvent.timestamp), 'p')}` : 'N/A'}
+                </p>
+              </div>
+            )}
+            {!isToday && (
+              <p className="mt-4 text-muted-foreground text-sm">
+                Viewing historical data. Clock actions are for today only.
+              </p>
+            )}
           </CardContent>
         </Card>
 
         <Card className="lg:col-span-1">
           <CardHeader>
-            <CardTitle>Today's Work Summary</CardTitle>
+            <CardTitle>{isToday ? "Today's" : "Selected Day's"} Work Summary</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-lg font-semibold">Total Work Time: {formatTime(dailySummary?.totalWorkTime || 0)}</p>
@@ -177,11 +229,11 @@ const EmployeeDashboard = () => {
 
         <Card className="lg:col-span-3">
           <CardHeader>
-            <CardTitle>Today's Attendance Log</CardTitle>
+            <CardTitle>{isToday ? "Today's" : "Selected Day's"} Attendance Log</CardTitle>
           </CardHeader>
           <CardContent>
             {dailyLogs.length === 0 ? (
-              <p className="text-muted-foreground">No attendance logs for today.</p>
+              <p className="text-muted-foreground">No attendance logs for {selectedDate ? format(selectedDate, 'PPP') : 'the selected day'}.</p>
             ) : (
               <div className="space-y-4">
                 {dailyLogs.map((log) => (
