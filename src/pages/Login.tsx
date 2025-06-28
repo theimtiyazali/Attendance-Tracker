@@ -16,13 +16,17 @@ const LoginPage = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("LoginPage: Attempting login with username:", username, "role:", role);
     const loggedInUser = login(username, role);
     if (loggedInUser) {
+      console.log("LoginPage: Login successful, user:", loggedInUser);
       if (loggedInUser.role === 'admin') {
         navigate("/admin-dashboard", { replace: true });
       } else if (loggedInUser.role === 'employee') {
         navigate("/employee-dashboard", { replace: true });
       }
+    } else {
+      console.log("LoginPage: Login failed (loggedInUser is null).");
     }
   };
 
