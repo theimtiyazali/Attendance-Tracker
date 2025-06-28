@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '@/components/Layout';
-import { useAuth } from '@/context/Auth/AuthContext';
+import { useAuth } from '@/context/AuthContext'; // Corrected import path
 import { getAllUsers, addUser, deleteUser } from '@/lib/auth';
 import { User, UserRole } from '@/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -96,6 +96,7 @@ const UserManagementPage = () => {
         </div>
       </Layout>
     );
+  );
   }
 
   return (
