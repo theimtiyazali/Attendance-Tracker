@@ -128,6 +128,11 @@ const EmployeeDashboard = () => {
     hover: { scale: 1.01, boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.1)" },
   };
 
+  const itemVariants = { // Added itemVariants definition
+    hidden: { opacity: 0, y: 10 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } },
+  };
+
   const buttonVariants = {
     hover: { scale: 1.05 },
     tap: { scale: 0.95 },
