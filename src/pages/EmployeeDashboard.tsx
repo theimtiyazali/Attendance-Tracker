@@ -17,6 +17,7 @@ import { Calendar as CalendarIcon } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
 
 const EmployeeDashboard = () => {
   const { user } = useAuth();
@@ -121,137 +122,179 @@ const EmployeeDashboard = () => {
 
   const isToday = selectedDate && format(selectedDate, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd');
 
+  const cardVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+    hover: { scale: 1.01, boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.1)" },
+  };
+
+  const buttonVariants = {
+    hover: { scale: 1.05 },
+    tap: { scale: 0.95 },
+  };
+
   return (
     <Layout>
-      <h2 className="text-3xl font-bold mb-6">Employee Dashboard</h2>
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <Card className="lg:col-span-1">
-          <CardHeader>
-            <CardTitle>Welcome, {user?.name}!</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p>Manage your attendance here.</p>
-            <div className="mt-4 space-y-2">
-              <Button
-                className="w-full"
-                onClick={() => handleClockAction('IN')}
-                disabled={!isToday || currentStatus?.status === 'Clocked In' || currentStatus?.status === 'On Break'}
-              >
-                Clock In
-              </Button>
-              <Button
-                className="w-full"
-                onClick={() => handleClockAction('OUT')}
-                disabled={!isToday || currentStatus?.status === 'Clocked Out' || currentStatus?.status === 'On Break'}
-                variant="destructive"
-              >
-                Clock Out
-              </Button>
-              <Button
-                className="w-full"
-                onClick={() => handleClockAction('BREAK_START')}
-                disabled={!isToday || currentStatus?.status !== 'Clocked In'}
-                variant="secondary"
-              >
-                Start Break
-              </Button>
-              <Button
-                className="w-full"
-                onClick={() => handleClockAction('BREAK_END')}
-                disabled={!isToday || currentStatus?.status !== 'On Break'}
-                variant="secondary"
-              >
-                End Break
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="lg:col-span-1">
-          <CardHeader>
-            <CardTitle>Select Date</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant={"outline"}
-                  className={cn(
-                    "w-full justify-start text-left font-normal",
-                    !selectedDate && "text-muted-foreground"
-                  )}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {selectedDate ? format(selectedDate, "PPP") : <span>Pick a date</span>}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={setSelectedDate}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
-            {isToday && currentStatus && (
-              <div className="mt-4">
-                <p className={`text-lg font-semibold ${currentStatus.status === 'Clocked In' ? 'text-green-600' : currentStatus.status === 'On Break' ? 'text-yellow-600' : 'text-red-600'}`}>
-                  Current Status: {currentStatus.status}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  Last action: {currentStatus.lastEvent ? `${currentStatus.lastEvent.type} at ${format(parseISO(currentStatus.lastEvent.timestamp), 'p')}` : 'N/A'}
-                </p>
+      <h2 className="text-3xl font-bold mb-6 text-primary">Employee Dashboard</h2>
+      <div className="grid gap-6 mb-6 md:grid-cols-2 lg:grid-cols-3">
+        <motion.div variants={cardVariants} initial="hidden" animate="visible" whileHover="hover" transition={{ delay: 0.1 }}>
+          <Card className="shadow-lg rounded-xl border-2 border-primary/10">
+            <CardHeader>
+              <CardTitle className="text-xl text-primary">Welcome, {user?.name}!</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">Manage your attendance here.</p>
+              <div className="mt-4 space-y-2">
+                <motion.div variants={itemVariants}>
+                  <Button
+                    className="w-full py-2 text-base font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300 shadow-md"
+                    onClick={() => handleClockAction('IN')}
+                    disabled={!isToday || currentStatus?.status === 'Clocked In' || currentStatus?.status === 'On Break'}
+                    whileHover="hover"
+                    whileTap="tap"
+                    variants={buttonVariants}
+                  >
+                    Clock In
+                  </Button>
+                </motion.div>
+                <motion.div variants={itemVariants}>
+                  <Button
+                    className="w-full py-2 text-base font-semibold bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-all duration-300 shadow-md"
+                    onClick={() => handleClockAction('OUT')}
+                    disabled={!isToday || currentStatus?.status === 'Clocked Out' || currentStatus?.status === 'On Break'}
+                    whileHover="hover"
+                    whileTap="tap"
+                    variants={buttonVariants}
+                  >
+                    Clock Out
+                  </Button>
+                </motion.div>
+                <motion.div variants={itemVariants}>
+                  <Button
+                    className="w-full py-2 text-base font-semibold bg-secondary text-secondary-foreground hover:bg-secondary/90 transition-all duration-300 shadow-md"
+                    onClick={() => handleClockAction('BREAK_START')}
+                    disabled={!isToday || currentStatus?.status !== 'Clocked In'}
+                    whileHover="hover"
+                    whileTap="tap"
+                    variants={buttonVariants}
+                  >
+                    Start Break
+                  </Button>
+                </motion.div>
+                <motion.div variants={itemVariants}>
+                  <Button
+                    className="w-full py-2 text-base font-semibold bg-secondary text-secondary-foreground hover:bg-secondary/90 transition-all duration-300 shadow-md"
+                    onClick={() => handleClockAction('BREAK_END')}
+                    disabled={!isToday || currentStatus?.status !== 'On Break'}
+                    whileHover="hover"
+                    whileTap="tap"
+                    variants={buttonVariants}
+                  >
+                    End Break
+                  </Button>
+                </motion.div>
               </div>
-            )}
-            {!isToday && (
-              <p className="mt-4 text-muted-foreground text-sm">
-                Viewing historical data. Clock actions are for today only.
-              </p>
-            )}
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </motion.div>
 
-        <Card className="lg:col-span-1">
-          <CardHeader>
-            <CardTitle>{isToday ? "Today's" : "Selected Day's"} Work Summary</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-lg font-semibold">Total Work Time: {formatTime(dailySummary?.totalWorkTime || 0)}</p>
-            <p className="text-sm text-muted-foreground">Total Break Time: {formatTime(dailySummary?.totalBreakTime || 0)}</p>
-            {dailySummary?.isEveningShift && (
-              <p className="text-sm text-purple-600 font-medium mt-2">
-                <span role="img" aria-label="moon">🌙</span> Evening Shift
-              </p>
-            )}
-          </CardContent>
-        </Card>
+        <motion.div variants={cardVariants} initial="hidden" animate="visible" whileHover="hover" transition={{ delay: 0.2 }}>
+          <Card className="shadow-lg rounded-xl border-2 border-primary/10">
+            <CardHeader>
+              <CardTitle className="text-xl text-primary">Select Date</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      "w-full justify-start text-left font-normal bg-input/50 border-primary/30 hover:bg-input/70 transition-all duration-300",
+                      !selectedDate && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {selectedDate ? format(selectedDate, "PPP") : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0 bg-card border-primary/30 shadow-lg rounded-xl">
+                  <Calendar
+                    mode="single"
+                    selected={selectedDate}
+                    onSelect={setSelectedDate}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+              {isToday && currentStatus && (
+                <div className="mt-4">
+                  <p className={`text-lg font-semibold ${currentStatus.status === 'Clocked In' ? 'text-green-600' : currentStatus.status === 'On Break' ? 'text-yellow-600' : 'text-red-600'}`}>
+                    Current Status: {currentStatus.status}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Last action: {currentStatus.lastEvent ? `${currentStatus.lastEvent.type} at ${format(parseISO(currentStatus.lastEvent.timestamp), 'p')}` : 'N/A'}
+                  </p>
+                </div>
+              )}
+              {!isToday && (
+                <p className="mt-4 text-muted-foreground text-sm">
+                  Viewing historical data. Clock actions are for today only.
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        </motion.div>
 
-        <Card className="lg:col-span-3">
-          <CardHeader>
-            <CardTitle>{isToday ? "Today's" : "Selected Day's"} Attendance Log</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {dailyLogs.length === 0 ? (
-              <p className="text-muted-foreground">No attendance logs for {selectedDate ? format(selectedDate, 'PPP') : 'the selected day'}.</p>
-            ) : (
-              <div className="space-y-4">
-                {dailyLogs.map((log) => (
-                  <div key={log.id} className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <span className={`font-medium ${log.type === 'IN' ? 'text-green-500' : log.type === 'OUT' ? 'text-red-500' : 'text-yellow-500'}`}>
-                        {log.type}
-                      </span>
-                      <span className="text-sm text-muted-foreground">
-                        {format(parseISO(log.timestamp), 'MMM dd, yyyy HH:mm:ss')}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+        <motion.div variants={cardVariants} initial="hidden" animate="visible" whileHover="hover" transition={{ delay: 0.3 }}>
+          <Card className="shadow-lg rounded-xl border-2 border-primary/10">
+            <CardHeader>
+              <CardTitle className="text-xl text-primary">{isToday ? "Today's" : "Selected Day's"} Work Summary</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-lg font-semibold text-foreground">Total Work Time: {formatTime(dailySummary?.totalWorkTime || 0)}</p>
+              <p className="text-sm text-muted-foreground">Total Break Time: {formatTime(dailySummary?.totalBreakTime || 0)}</p>
+              {dailySummary?.isEveningShift && (
+                <p className="text-sm text-purple-600 font-medium mt-2">
+                  <span role="img" aria-label="moon">🌙</span> Evening Shift
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        <motion.div variants={cardVariants} initial="hidden" animate="visible" whileHover="hover" transition={{ delay: 0.4 }} className="lg:col-span-3">
+          <Card className="shadow-lg rounded-xl border-2 border-primary/10">
+            <CardHeader>
+              <CardTitle className="text-xl text-primary">{isToday ? "Today's" : "Selected Day's"} Attendance Log</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {dailyLogs.length === 0 ? (
+                <p className="text-muted-foreground">No attendance logs for {selectedDate ? format(selectedDate, 'PPP') : 'the selected day'}.</p>
+              ) : (
+                <div className="space-y-4">
+                  {dailyLogs.map((log) => (
+                    <motion.div
+                      key={log.id}
+                      className="flex items-center justify-between p-3 bg-secondary/20 rounded-md shadow-sm hover:bg-secondary/30 transition-all duration-200"
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <span className={`font-medium ${log.type === 'IN' ? 'text-green-500' : log.type === 'OUT' ? 'text-red-500' : 'text-yellow-500'}`}>
+                          {log.type}
+                        </span>
+                        <span className="text-sm text-muted-foreground">
+                          {format(parseISO(log.timestamp), 'MMM dd, yyyy HH:mm:ss')}
+                        </span>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </motion.div>
       </div>
     </Layout>
   );

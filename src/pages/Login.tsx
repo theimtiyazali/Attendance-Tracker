@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { UserRole } from '@/types';
+import { motion } from 'framer-motion';
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
@@ -30,44 +31,71 @@ const LoginPage = () => {
     }
   };
 
+  const cardVariants = {
+    hidden: { opacity: 0, y: 50, scale: 0.95 },
+    visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.6, ease: "easeOut" } },
+    hover: { scale: 1.02, boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.15)" },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
+  };
+
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Welcome to Attendance Tracker</CardTitle>
-          <CardDescription>Log in to your account</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <Label htmlFor="username">Username</Label>
-              <Input
-                id="username"
-                type="text"
-                placeholder="Enter your username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="role">Role</Label>
-              <Select value={role} onValueChange={(value: UserRole) => setRole(value)}>
-                <SelectTrigger id="role">
-                  <SelectValue placeholder="Select a role" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="employee">Employee</SelectItem>
-                  <SelectItem value="admin">Admin</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <Button type="submit" className="w-full">
-              Login
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+    <div className="flex items-center justify-center min-h-screen bg-background text-foreground p-4">
+      <motion.div
+        className="w-full max-w-md"
+        variants={cardVariants}
+        initial="hidden"
+        animate="visible"
+        whileHover="hover"
+      >
+        <Card className="shadow-lg rounded-xl border-2 border-primary/20">
+          <CardHeader className="text-center">
+            <CardTitle className="text-3xl font-extrabold text-primary">Welcome to Attendance Tracker</CardTitle>
+            <CardDescription className="text-muted-foreground mt-2">Log in to your account</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <motion.div variants={itemVariants}>
+                <Label htmlFor="username" className="text-foreground">Username</Label>
+                <Input
+                  id="username"
+                  type="text"
+                  placeholder="Enter your username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                  className="mt-1 bg-input/50 border-primary/30 focus:border-primary focus:ring-primary transition-all duration-300"
+                />
+              </motion.div>
+              <motion.div variants={itemVariants}>
+                <Label htmlFor="role" className="text-foreground">Role</Label>
+                <Select value={role} onValueChange={(value: UserRole) => setRole(value)}>
+                  <SelectTrigger id="role" className="mt-1 bg-input/50 border-primary/30 focus:border-primary focus:ring-primary transition-all duration-300">
+                    <SelectValue placeholder="Select a role" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-card border-primary/30">
+                    <SelectItem value="employee">Employee</SelectItem>
+                    <SelectItem value="admin">Admin</SelectItem>
+                  </SelectContent>
+                </Select>
+              </motion.div>
+              <motion.div variants={itemVariants}>
+                <Button
+                  type="submit"
+                  className="w-full py-3 text-lg font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300 shadow-md hover:shadow-lg"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Login
+                </Button>
+              </motion.div>
+            </form>
+          </CardContent>
+        </Card>
+      </motion.div>
     </div>
   );
 };

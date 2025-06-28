@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth, AuthProvider } from '@/context/AuthContext';
+import { useAuth } from '@/context/AuthContext';
 import Layout from '@/components/Layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { getAllUsers } from '@/lib/auth';
@@ -19,6 +19,7 @@ import { cn } from '@/lib/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { toast } from 'sonner';
+import { motion } from 'framer-motion';
 
 const AdminDashboard = () => {
   const { user: currentUser } = useAuth();
@@ -79,146 +80,179 @@ const AdminDashboard = () => {
     return `${hours}h ${mins}m`;
   };
 
+  const cardVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+    hover: { scale: 1.01, boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.1)" },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } },
+  };
+
   return (
     <Layout>
-      <h2 className="text-3xl font-bold mb-6">Admin Dashboard</h2>
+      <h2 className="text-3xl font-bold mb-6 text-primary">Admin Dashboard</h2>
       <div className="grid gap-6 mb-6 md:grid-cols-2 lg:grid-cols-3">
-        <Card>
+        <motion.div variants={cardVariants} initial="hidden" animate="visible" whileHover="hover" transition={{ delay: 0.1 }}>
+          <Card className="shadow-lg rounded-xl border-2 border-primary/10">
+            <CardHeader>
+              <CardTitle className="text-xl text-primary">Welcome, {currentUser?.name}!</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">Overview of all employee attendance and reports.</p>
+            </CardContent>
+          </Card>
+        </motion.div>
+        <motion.div variants={cardVariants} initial="hidden" animate="visible" whileHover="hover" transition={{ delay: 0.2 }}>
+          <Card className="shadow-lg rounded-xl border-2 border-primary/10">
+            <CardHeader>
+              <CardTitle className="text-xl text-primary">Live Employee Statuses</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {allUsers.length === 0 ? (
+                <p className="text-muted-foreground">No employees registered yet.</p>
+              ) : (
+                <div className="space-y-2">
+                  {allUsers.map(u => (
+                    <motion.div key={u.id} className="flex items-center justify-between text-sm p-2 bg-secondary/10 rounded-md" variants={itemVariants}>
+                      <span className="font-medium text-foreground">{u.name}</span>
+                      <span className={`font-semibold ${employeeStatuses[u.id]?.status === 'Clocked In' ? 'text-green-600' : employeeStatuses[u.id]?.status === 'On Break' ? 'text-yellow-600' : 'text-red-600'}`}>
+                        {employeeStatuses[u.id]?.status}
+                      </span>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </motion.div>
+        <motion.div variants={cardVariants} initial="hidden" animate="visible" whileHover="hover" transition={{ delay: 0.3 }}>
+          <Card className="shadow-lg rounded-xl border-2 border-primary/10">
+            <CardHeader>
+              <CardTitle className="text-xl text-primary">Filter Attendance</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <motion.div variants={itemVariants}>
+                <label className="block text-sm font-medium mb-1 text-foreground">Select Date</label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-full justify-start text-left font-normal bg-input/50 border-primary/30 hover:bg-input/70 transition-all duration-300",
+                        !selectedDate && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {selectedDate ? format(selectedDate, "PPP") : <span>Pick a date</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0 bg-card border-primary/30 shadow-lg rounded-xl">
+                    <Calendar
+                      mode="single"
+                      selected={selectedDate}
+                      onSelect={setSelectedDate}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              </motion.div>
+              <motion.div variants={itemVariants}>
+                <label className="block text-sm font-medium mb-1 text-foreground">Select Employee</label>
+                <Select value={selectedEmployeeId} onValueChange={setSelectedEmployeeId}>
+                  <SelectTrigger className="bg-input/50 border-primary/30 focus:border-primary focus:ring-primary transition-all duration-300">
+                    <SelectValue placeholder="All Employees" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-card border-primary/30">
+                    <SelectItem value="all">All Employees</SelectItem>
+                    {allUsers.map(u => (
+                      <SelectItem key={u.id} value={u.id}>{u.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </motion.div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      </div>
+
+      <motion.div variants={cardVariants} initial="hidden" animate="visible" whileHover="hover" transition={{ delay: 0.4 }} className="mb-6">
+        <Card className="shadow-lg rounded-xl border-2 border-primary/10">
           <CardHeader>
-            <CardTitle>Welcome, {currentUser?.name}!</CardTitle>
+            <CardTitle className="text-xl text-primary">Daily Summaries for {selectedDate ? format(selectedDate, 'PPP') : 'Today'}</CardTitle>
           </CardHeader>
           <CardContent>
-            <p>Overview of all employee attendance and reports.</p>
+            {Object.keys(dailySummaries).length === 0 ? (
+              <p className="text-muted-foreground">No summaries available for the selected criteria.</p>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-secondary/20 hover:bg-secondary/20">
+                    <TableHead className="text-foreground">Employee</TableHead>
+                    <TableHead className="text-foreground">Work Time</TableHead>
+                    <TableHead className="text-foreground">Break Time</TableHead>
+                    <TableHead className="text-foreground">Evening Shift</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {Object.entries(dailySummaries)
+                    .filter(([userId]) => selectedEmployeeId === 'all' || userId === selectedEmployeeId)
+                    .map(([userId, summary]) => (
+                      <motion.tr
+                        key={userId}
+                        className="hover:bg-secondary/10 transition-colors duration-200"
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <TableCell className="font-medium text-foreground">{allUsers.find(u => u.id === userId)?.name || userId}</TableCell>
+                        <TableCell className="text-foreground">{formatTime(summary.totalWorkTime)}</TableCell>
+                        <TableCell className="text-foreground">{formatTime(summary.totalBreakTime)}</TableCell>
+                        <TableCell className="text-foreground">{summary.isEveningShift ? 'Yes 🌙' : 'No'}</TableCell>
+                      </motion.tr>
+                    ))}
+                </TableBody>
+              </Table>
+            )}
           </CardContent>
         </Card>
-        <Card>
+      </motion.div>
+
+      <motion.div variants={cardVariants} initial="hidden" animate="visible" whileHover="hover" transition={{ delay: 0.5 }}>
+        <Card className="shadow-lg rounded-xl border-2 border-primary/10">
           <CardHeader>
-            <CardTitle>Live Employee Statuses</CardTitle>
+            <CardTitle className="text-xl text-primary">Attendance Logs for {selectedDate ? format(selectedDate, 'PPP') : 'Today'} {selectedEmployeeId !== 'all' ? `(${allUsers.find(u => u.id === selectedEmployeeId)?.name})` : ''}</CardTitle>
           </CardHeader>
           <CardContent>
-            {allUsers.length === 0 ? (
-              <p className="text-muted-foreground">No employees registered yet.</p>
+            {filteredLogs.length === 0 ? (
+              <p className="text-muted-foreground">No attendance logs for the selected criteria.</p>
             ) : (
-              <div className="space-y-2">
-                {allUsers.map(u => (
-                  <div key={u.id} className="flex items-center justify-between text-sm">
-                    <span className="font-medium">{u.name}</span>
-                    <span className={`font-semibold ${employeeStatuses[u.id]?.status === 'Clocked In' ? 'text-green-600' : employeeStatuses[u.id]?.status === 'On Break' ? 'text-yellow-600' : 'text-red-600'}`}>
-                      {employeeStatuses[u.id]?.status}
-                    </span>
-                  </div>
+              <div className="space-y-4">
+                {filteredLogs.map((log) => (
+                  <motion.div
+                    key={log.id}
+                    className="flex items-center justify-between p-3 bg-secondary/20 rounded-md shadow-sm hover:bg-secondary/30 transition-all duration-200"
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <div className="flex items-center space-x-2">
+                      <span className={`font-medium ${log.type === 'IN' ? 'text-green-500' : log.type === 'OUT' ? 'text-red-500' : 'text-yellow-500'}`}>
+                        {log.type}
+                      </span>
+                      <span className="text-sm text-muted-foreground">
+                        {allUsers.find(u => u.id === log.userId)?.name || log.userId} at {format(parseISO(log.timestamp), 'MMM dd, yyyy HH:mm:ss')}
+                      </span>
+                    </div>
+                  </motion.div>
                 ))}
               </div>
             )}
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Filter Attendance</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Select Date</label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant={"outline"}
-                    className={cn(
-                      "w-full justify-start text-left font-normal",
-                      !selectedDate && "text-muted-foreground"
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {selectedDate ? format(selectedDate, "PPP") : <span>Pick a date</span>}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
-                  <Calendar
-                    mode="single"
-                    selected={selectedDate}
-                    onSelect={setSelectedDate}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Select Employee</label>
-              <Select value={selectedEmployeeId} onValueChange={setSelectedEmployeeId}>
-                <SelectTrigger>
-                  <SelectValue placeholder="All Employees" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Employees</SelectItem>
-                  {allUsers.map(u => (
-                    <SelectItem key={u.id} value={u.id}>{u.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>Daily Summaries for {selectedDate ? format(selectedDate, 'PPP') : 'Today'}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {Object.keys(dailySummaries).length === 0 ? (
-            <p className="text-muted-foreground">No summaries available for the selected criteria.</p>
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Employee</TableHead>
-                  <TableHead>Work Time</TableHead>
-                  <TableHead>Break Time</TableHead>
-                  <TableHead>Evening Shift</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {Object.entries(dailySummaries)
-                  .filter(([userId]) => selectedEmployeeId === 'all' || userId === selectedEmployeeId)
-                  .map(([userId, summary]) => (
-                    <TableRow key={userId}>
-                      <TableCell className="font-medium">{allUsers.find(u => u.id === userId)?.name || userId}</TableCell>
-                      <TableCell>{formatTime(summary.totalWorkTime)}</TableCell>
-                      <TableCell>{formatTime(summary.totalBreakTime)}</TableCell>
-                      <TableCell>{summary.isEveningShift ? 'Yes 🌙' : 'No'}</TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
-          )}
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Attendance Logs for {selectedDate ? format(selectedDate, 'PPP') : 'Today'} {selectedEmployeeId !== 'all' ? `(${allUsers.find(u => u.id === selectedEmployeeId)?.name})` : ''}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {filteredLogs.length === 0 ? (
-            <p className="text-muted-foreground">No attendance logs for the selected criteria.</p>
-          ) : (
-            <div className="space-y-4">
-              {filteredLogs.map((log) => (
-                <div key={log.id} className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <span className={`font-medium ${log.type === 'IN' ? 'text-green-500' : log.type === 'OUT' ? 'text-red-500' : 'text-yellow-500'}`}>
-                      {log.type}
-                    </span>
-                    <span className="text-sm text-muted-foreground">
-                      {allUsers.find(u => u.id === log.userId)?.name || log.userId} at {format(parseISO(log.timestamp), 'MMM dd, yyyy HH:mm:ss')}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      </motion.div>
     </Layout>
   );
 };

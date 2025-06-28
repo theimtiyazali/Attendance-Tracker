@@ -5,15 +5,21 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { Link } from 'react-router-dom'; // Import Link
+import { motion } from 'framer-motion';
 
 const Header = () => {
   const { logout, user, isAdmin } = useAuth();
   const { setTheme, theme } = useTheme(); // Destructure setTheme and theme from useTheme
 
   return (
-    <header className="flex items-center justify-between p-4 border-b bg-background">
+    <motion.header
+      className="flex items-center justify-between p-4 border-b border-primary/20 bg-background text-foreground shadow-md"
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ type: "spring", stiffness: 120, damping: 14, delay: 0.1 }}
+    >
       <div className="flex items-center space-x-4">
-        <h1 className="text-xl font-bold">Attendance Tracker</h1>
+        <h1 className="text-xl font-bold text-primary">Attendance Tracker</h1>
         {user && (
           <span className="text-sm text-muted-foreground">
             Logged in as: {user.name} ({user.role})
@@ -21,36 +27,42 @@ const Header = () => {
         )}
         {isAdmin && (
           <Link to="/admin/users">
-            <Button variant="ghost">User Management</Button>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button variant="ghost" className="text-primary hover:bg-primary/10">User Management</Button>
+            </motion.div>
           </Link>
         )}
       </div>
       <div className="flex items-center space-x-2">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon">
-              <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-              <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-              <span className="sr-only">Toggle theme</span>
-            </Button>
+            <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+              <Button variant="ghost" size="icon" className="text-primary hover:bg-primary/10">
+                <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                <span className="sr-only">Toggle theme</span>
+              </Button>
+            </motion.div>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => setTheme("light")}>
+          <DropdownMenuContent align="end" className="bg-card border-primary/30">
+            <DropdownMenuItem onClick={() => setTheme("light")} className="hover:bg-secondary/20">
               Light
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setTheme("dark")}>
+            <DropdownMenuItem onClick={() => setTheme("dark")} className="hover:bg-secondary/20">
               Dark
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setTheme("system")}>
+            <DropdownMenuItem onClick={() => setTheme("system")} className="hover:bg-secondary/20">
               System
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        <Button onClick={logout} variant="outline">
-          Logout
-        </Button>
+        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+          <Button onClick={logout} variant="outline" className="border-primary text-primary hover:bg-primary/10">
+            Logout
+          </Button>
+        </motion.div>
       </div>
-    </header>
+    </motion.header>
   );
 };
 
