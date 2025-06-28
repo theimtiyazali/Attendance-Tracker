@@ -7,6 +7,7 @@ import {
   getCurrentAttendanceStatus,
   calculateDailySummary,
   getAttendanceLogsForUser,
+  getPotentiallyForgottenClockOuts,
 } from '@/lib/attendance';
 import { User, DailySummary, AttendanceLog } from '@/types';
 import { format, parseISO } from 'date-fns';
@@ -17,6 +18,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { cn } from '@/lib/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { toast } from 'sonner';
 
 const AdminDashboard = () => {
   const { user: currentUser } = useAuth();
@@ -56,6 +58,13 @@ const AdminDashboard = () => {
     } else {
       setFilteredLogs(getAttendanceLogsForUser(selectedEmployeeId).filter(log => log.timestamp.startsWith(dateString)));
     }
+
+    // Check for forgotten clock-outs and show notifications
+    const forgotten = getPotentiallyForgottenClockOuts(users.map(u => u.id));
+    forgotten.forEach(item => {
+      const employeeName = users.find(u => u.id === item.userId)?.name || item.userId;
+      toast.warning(`${employeeName} might have forgotten to clock out! Last action was IN at ${format(parseISO(item.lastEventTimestamp), 'p')}.`);
+    });
   };
 
   useEffect(() => {

@@ -166,3 +166,20 @@ export const calculateDailySummary = (userId: string, date: string = getTodayDat
     logs: dailyLogs,
   };
 };
+
+export const getPotentiallyForgottenClockOuts = (userIds: string[]): { userId: string; lastEventTimestamp: string }[] => {
+  const forgottenClockOuts: { userId: string; lastEventTimestamp: string }[] = [];
+  const now = new Date().getTime();
+  const TWELVE_HOURS_IN_MS = 12 * 60 * 60 * 1000; // 12 hours in milliseconds
+
+  userIds.forEach(userId => {
+    const { status, lastEvent } = getCurrentAttendanceStatus(userId);
+    if (status === 'Clocked In' && lastEvent) {
+      const lastEventTime = new Date(lastEvent.timestamp).getTime();
+      if (now - lastEventTime > TWELVE_HOURS_IN_MS) {
+        forgottenClockOuts.push({ userId, lastEventTimestamp: lastEvent.timestamp });
+      }
+    }
+  });
+  return forgottenClockOuts;
+};
