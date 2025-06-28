@@ -7,8 +7,8 @@ import { useTheme } from 'next-themes';
 import { Link } from 'react-router-dom'; // Import Link
 
 const Header = () => {
-  const { logout, user, isAdmin } = useAuth(); // Destructure isAdmin
-  const { setTheme, theme } = useTheme();
+  const { logout, user, isAdmin } = useAuth();
+  const { setTheme, theme } = useTheme(); // Destructure setTheme and theme from useTheme
 
   return (
     <header className="flex items-center justify-between p-4 border-b bg-background">
@@ -19,7 +19,7 @@ const Header = () => {
             Logged in as: {user.name} ({user.role})
           </span>
         )}
-        {isAdmin && ( // Conditionally render link for admins
+        {isAdmin && (
           <Link to="/admin/users">
             <Button variant="ghost">User Management</Button>
           </Link>
